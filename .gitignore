@@ -1,0 +1,25 @@
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.idea/
+.vscode/
+
+# Shell and log artifacts
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Local kube and cluster artifacts
+.kube/
+kubeconfig*
+
+# Environment files
+.env
+.env.*
+
+# Temporary directories
+tmp/
+temp/
