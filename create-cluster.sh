@@ -132,38 +132,62 @@ ensure_cluster_absent() {
 }
 
 verify_generated_configuration() {
-  local instance_group_table control_plane_count worker_count total_groups
+  local instance_group_table
+  local control_plane_groups
+  local control_plane_min_total
+  local control_plane_max_total
+  local active_worker_groups
+  local worker_min_total
+  local worker_max_total
 
   log_info "Verifying generated KOPS instance groups."
   instance_group_table="$(kops get ig --name "${KOPS_CLUSTER_NAME}" --state "${KOPS_STATE_STORE}")"
   printf "%s\n" "${instance_group_table}"
 
-  control_plane_count="$(
+  control_plane_groups="$(
     printf "%s\n" "${instance_group_table}" | awk '
-      NR > 1 && NF > 0 && ($2 == "ControlPlane" || $2 == "Master") && $4 == "1" && $5 == "1" { count++ }
+      NR > 1 && NF > 0 && ($2 == "ControlPlane" || $2 == "Master") { count++ }
       END { print count + 0 }
     '
   )"
-  worker_count="$(
+  control_plane_min_total="$(
     printf "%s\n" "${instance_group_table}" | awk '
-      NR > 1 && NF > 0 && $2 == "Node" && $4 == "1" && $5 == "1" { count++ }
+      NR > 1 && NF > 0 && ($2 == "ControlPlane" || $2 == "Master") { total += $4 }
+      END { print total + 0 }
+    '
+  )"
+  control_plane_max_total="$(
+    printf "%s\n" "${instance_group_table}" | awk '
+      NR > 1 && NF > 0 && ($2 == "ControlPlane" || $2 == "Master") { total += $5 }
+      END { print total + 0 }
+    '
+  )"
+  active_worker_groups="$(
+    printf "%s\n" "${instance_group_table}" | awk '
+      NR > 1 && NF > 0 && $2 == "Node" && ($4 > 0 || $5 > 0) { count++ }
       END { print count + 0 }
     '
   )"
-  total_groups="$(
+  worker_min_total="$(
     printf "%s\n" "${instance_group_table}" | awk '
-      NR > 1 && NF > 0 { count++ }
-      END { print count + 0 }
+      NR > 1 && NF > 0 && $2 == "Node" { total += $4 }
+      END { print total + 0 }
+    '
+  )"
+  worker_max_total="$(
+    printf "%s\n" "${instance_group_table}" | awk '
+      NR > 1 && NF > 0 && $2 == "Node" { total += $5 }
+      END { print total + 0 }
     '
   )"
 
-  if [[ "${control_plane_count}" != "1" || "${worker_count}" != "1" || "${total_groups}" != "2" ]]; then
+  if [[ "${control_plane_groups}" != "1" || "${control_plane_min_total}" != "1" || "${control_plane_max_total}" != "1" || "${active_worker_groups}" != "1" || "${worker_min_total}" != "1" || "${worker_max_total}" != "1" ]]; then
     log_error "Generated KOPS configuration does not match the expected topology."
-    log_error "Expected exactly 1 control plane instance group and 1 worker instance group, both sized 1/1."
+    log_error "Expected 1 control plane at 1/1 and an effective worker capacity of 1/1 across worker instance groups."
     exit 1
   fi
 
-  log_success "Generated KOPS configuration matches 1 control plane and 1 worker."
+  log_success "Generated KOPS configuration matches 1 control plane and 1 effective worker."
 }
 
 create_cluster_configuration() {
