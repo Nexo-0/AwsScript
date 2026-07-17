@@ -112,7 +112,9 @@ main() {
 
 main "$@"
 
-if ! is_sourced; then
+if is_sourced; then
+  trap - ERR
+else
   log_warn "This script was executed, not sourced."
   log_warn "To persist exported variables in your current shell, run: source ./setup.sh"
 fi
