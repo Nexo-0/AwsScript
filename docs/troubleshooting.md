@@ -100,7 +100,7 @@ If you are using an EC2 instance role, confirm the instance was launched with th
 Check:
 
 ```bash
-kops validate cluster --name kabir.k8s.local --state s3://kunal-petare-kops-state-2026 --wait 10m
+kops validate cluster --name kunal.k8s.local --state s3://kunal-petare-kops-state-2026 --wait 10m
 kubectl get nodes -o wide
 kubectl cluster-info
 ```
@@ -178,7 +178,7 @@ That script generates the local SSH key pair required for cluster creation.
 Refresh kubeconfig:
 
 ```bash
-kops export kubecfg --name kabir.k8s.local --state s3://kunal-petare-kops-state-2026 --admin=18h
+kops export kubecfg --name kunal.k8s.local --state s3://kunal-petare-kops-state-2026 --admin=18h
 ```
 
 Then verify:

@@ -7,7 +7,7 @@ This repository intentionally stops at cluster infrastructure. Pods, Deployments
 Key environment defaults:
 
 - AWS Region: `ap-south-1`
-- Cluster Name: `kabir.k8s.local`
+- Cluster Name: `kunal.k8s.local`
 - KOPS State Store: `s3://kunal-petare-kops-state-2026`
 - Management Machine OS: Amazon Linux 2023
 
@@ -54,7 +54,7 @@ The cluster is built as a short-lived KOPS environment suitable for repeated lab
       v                                              v
 +--------------------------+            +--------------------------------------+
 | Control Plane            |            | Worker Nodes                         |
-| 1 x c7i-flex.large       |            | 2 x c7i-flex.large                   |
+| 1 x c7i-flex.large       |            | 1 x c7i-flex.large                   |
 | API server, etcd,        |            | Schedulable nodes for lab exercises  |
 | controller manager       |            | Auto Scaling Groups                  |
 +------------+-------------+            +------------------+-------------------+
@@ -159,11 +159,11 @@ source ./setup.sh
 
 Cluster defaults:
 
-- Cluster name: `kabir.k8s.local`
+- Cluster name: `kunal.k8s.local`
 - State store: `s3://kunal-petare-kops-state-2026`
 - Region: `ap-south-1`
 - Control plane: `1 x c7i-flex.large`
-- Worker nodes: `2 x c7i-flex.large`
+- Worker nodes: `1 x c7i-flex.large`
 - Networking: Calico
 
 The cluster creation script:
@@ -180,7 +180,7 @@ The cluster creation script:
 Validation is included in the creation workflow, but you can re-run checks manually:
 
 ```bash
-kops validate cluster --name kabir.k8s.local --state s3://kunal-petare-kops-state-2026 --wait 10m
+kops validate cluster --name kunal.k8s.local --state s3://kunal-petare-kops-state-2026 --wait 10m
 kubectl get nodes -o wide
 kubectl cluster-info
 ```
@@ -188,7 +188,7 @@ kubectl cluster-info
 Expected outcome:
 
 - One control plane node is created
-- Two worker nodes are registered
+- One worker node is registered
 - All nodes become `Ready`
 
 ## Destroy Cluster
@@ -200,7 +200,7 @@ source ./setup.sh
 ./destroy-cluster.sh
 ```
 
-The destroy script deletes only the cluster named `kabir.k8s.local`.
+The destroy script deletes only the cluster named `kunal.k8s.local`.
 
 It does not delete:
 

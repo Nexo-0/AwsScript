@@ -6,7 +6,7 @@ set -Eeuo pipefail
 
 SCRIPT_NAME="$(basename "${BASH_SOURCE[0]}")"
 DEFAULT_AWS_REGION="ap-south-1"
-DEFAULT_CLUSTER_NAME="kabir.k8s.local"
+DEFAULT_CLUSTER_NAME="kunal.k8s.local"
 DEFAULT_KOPS_STATE_STORE="s3://kunal-petare-kops-state-2026"
 
 if [[ -t 1 ]]; then

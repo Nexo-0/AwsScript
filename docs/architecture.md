@@ -7,11 +7,11 @@ This repository provisions only the Kubernetes infrastructure needed for repeate
 ## Environment Summary
 
 - AWS Region: `ap-south-1`
-- Cluster Name: `kabir.k8s.local`
+- Cluster Name: `kunal.k8s.local`
 - State Store: `s3://kunal-petare-kops-state-2026`
 - Management Machine: Amazon Linux 2023
 - Control Plane: `1 x c7i-flex.large`
-- Worker Nodes: `2 x c7i-flex.large`
+- Worker Nodes: `1 x c7i-flex.large`
 - Networking: Calico
 - Topology: Public
 
@@ -37,7 +37,7 @@ This repository provisions only the Kubernetes infrastructure needed for repeate
                                                v
                               +----------------------------------+
                               | KOPS Cluster Definition          |
-                              | kabir.k8s.local                  |
+                              | kunal.k8s.local                  |
                               +----------------+-----------------+
                                                |
         +--------------------------------------+--------------------------------------+
@@ -47,7 +47,7 @@ This repository provisions only the Kubernetes infrastructure needed for repeate
 | AWS Networking            |                                          | AWS Compute               |
 |---------------------------|                                          |---------------------------|
 | VPC                       |                                          | 1 Control Plane Instance  |
-| Public Subnets            |                                          | 2 Worker Node Instances   |
+| Public Subnets            |                                          | 1 Worker Node Instance    |
 | Route Tables              |                                          | Auto Scaling Groups       |
 | Internet Gateway          |                                          | EBS Root Volumes          |
 | Security Groups           |                                          | Load Balancer components  |
@@ -98,9 +98,9 @@ For college lab use, a single control plane is a practical tradeoff between cost
 
 ### Worker Nodes
 
-The repository provisions two worker nodes of type `c7i-flex.large`. These nodes are where practical-specific Kubernetes resources run after the cluster is created.
+The repository provisions one worker node of type `c7i-flex.large`. This node is where practical-specific Kubernetes resources run after the cluster is created.
 
-Keeping worker nodes separate from the control plane gives you a more realistic Kubernetes environment for exercises involving scheduling, services, networking, and troubleshooting.
+Keeping the worker node separate from the control plane gives you a more realistic Kubernetes environment for exercises involving scheduling, services, networking, and troubleshooting.
 
 ### EBS
 
@@ -108,7 +108,7 @@ Each EC2 instance uses EBS-backed root storage. These volumes are created as par
 
 ### Auto Scaling Groups
 
-KOPS uses Auto Scaling Groups to manage instance groups. Even though the cluster is fixed at one control plane and two workers by default, AWS still tracks those node groups using scaling constructs so instances can be recreated if needed.
+KOPS uses Auto Scaling Groups to manage instance groups. Even though the cluster is fixed at one control plane and one worker by default, AWS still tracks those node groups using scaling constructs so instances can be recreated if needed.
 
 ### KOPS State Store
 

@@ -6,11 +6,11 @@ set -Eeuo pipefail
 
 SCRIPT_NAME="$(basename "${BASH_SOURCE[0]}")"
 DEFAULT_AWS_REGION="ap-south-1"
-DEFAULT_CLUSTER_NAME="kabir.k8s.local"
+DEFAULT_CLUSTER_NAME="kunal.k8s.local"
 DEFAULT_KOPS_STATE_STORE="s3://kunal-petare-kops-state-2026"
 DEFAULT_ZONES="ap-south-1a,ap-south-1b,ap-south-1c"
 DEFAULT_MASTER_ZONES="ap-south-1a"
-DEFAULT_NODE_COUNT="2"
+DEFAULT_NODE_COUNT="1"
 DEFAULT_NODE_SIZE="c7i-flex.large"
 DEFAULT_MASTER_COUNT="1"
 DEFAULT_MASTER_SIZE="c7i-flex.large"
@@ -131,6 +131,41 @@ ensure_cluster_absent() {
   fi
 }
 
+verify_generated_configuration() {
+  local instance_group_table control_plane_count worker_count total_groups
+
+  log_info "Verifying generated KOPS instance groups."
+  instance_group_table="$(kops get ig --name "${KOPS_CLUSTER_NAME}" --state "${KOPS_STATE_STORE}")"
+  printf "%s\n" "${instance_group_table}"
+
+  control_plane_count="$(
+    printf "%s\n" "${instance_group_table}" | awk '
+      NR > 1 && NF > 0 && ($2 == "ControlPlane" || $2 == "Master") && $4 == "1" && $5 == "1" { count++ }
+      END { print count + 0 }
+    '
+  )"
+  worker_count="$(
+    printf "%s\n" "${instance_group_table}" | awk '
+      NR > 1 && NF > 0 && $2 == "Node" && $4 == "1" && $5 == "1" { count++ }
+      END { print count + 0 }
+    '
+  )"
+  total_groups="$(
+    printf "%s\n" "${instance_group_table}" | awk '
+      NR > 1 && NF > 0 { count++ }
+      END { print count + 0 }
+    '
+  )"
+
+  if [[ "${control_plane_count}" != "1" || "${worker_count}" != "1" || "${total_groups}" != "2" ]]; then
+    log_error "Generated KOPS configuration does not match the expected topology."
+    log_error "Expected exactly 1 control plane instance group and 1 worker instance group, both sized 1/1."
+    exit 1
+  fi
+
+  log_success "Generated KOPS configuration matches 1 control plane and 1 worker."
+}
+
 create_cluster_configuration() {
   log_info "Creating KOPS cluster configuration."
 
@@ -192,6 +227,7 @@ main() {
   verify_state_store
   ensure_cluster_absent
   create_cluster_configuration
+  verify_generated_configuration
   apply_cluster_configuration
   validate_cluster
   print_cluster_status

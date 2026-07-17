@@ -7,7 +7,7 @@ Prepare AWS so that a fresh Amazon Linux 2023 management instance can repeatedly
 ## Fixed Environment Values
 
 - Region: `ap-south-1`
-- Cluster Name: `kabir.k8s.local`
+- Cluster Name: `kunal.k8s.local`
 - State Store: `s3://kunal-petare-kops-state-2026`
 
 ## S3 State Store
@@ -64,7 +64,7 @@ Then verify:
 aws sts get-caller-identity
 ```
 
-## Why `kabir.k8s.local` Works
+## Why `kunal.k8s.local` Works
 
 The cluster name uses the `.k8s.local` suffix, which is commonly used with KOPS for non-public DNS and lab-style clusters. This avoids the need to register a public DNS zone for repeated practice environments.
 
