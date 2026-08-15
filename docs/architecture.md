@@ -6,9 +6,9 @@ This repository provisions only the Kubernetes infrastructure needed for repeate
 
 ## Environment Summary
 
-- AWS Region: `ap-south-1`
-- Cluster Name: `kunal.k8s.local`
-- State Store: `s3://kunal-petare-kops-state-2026`
+- AWS Region: `us-east-1`
+- Cluster Name: `online.k8s.local`
+- State Store: `s3://aarush.kops.v1`
 - Management Machine: Amazon Linux 2023
 - Control Plane: `1 x c7i-flex.large`
 - Worker Nodes: `1 x c7i-flex.large`
@@ -31,13 +31,13 @@ This repository provisions only the Kubernetes infrastructure needed for repeate
                                                v
                               +----------------------------------+
                               | S3 KOPS State Store              |
-                              | kunal-petare-kops-state-2026     |
+                              | aarush.kops.v1                    |
                               +----------------+-----------------+
                                                |
                                                v
                               +----------------------------------+
                               | KOPS Cluster Definition          |
-                              | kunal.k8s.local                  |
+                              | online.k8s.local                 |
                               +----------------+-----------------+
                                                |
         +--------------------------------------+--------------------------------------+
@@ -62,7 +62,7 @@ KOPS creates a dedicated VPC for the cluster unless instructed to use an existin
 
 ### Subnets
 
-The cluster is configured with availability zones in `ap-south-1a`, `ap-south-1b`, and `ap-south-1c`. KOPS uses these zones to create subnets for the control plane and worker node instance groups.
+The cluster is configured in availability zone `us-east-1a`. KOPS uses this zone to create subnets for the control plane and worker node instance groups.
 
 For this lab-oriented design, the cluster uses a public topology. That keeps provisioning simpler and avoids the added cost and complexity of NAT gateways for short-lived practical sessions.
 
@@ -112,7 +112,7 @@ KOPS uses Auto Scaling Groups to manage instance groups. Even though the cluster
 
 ### KOPS State Store
 
-The S3 bucket `kunal-petare-kops-state-2026` stores cluster state, configuration, and metadata used by KOPS. This bucket is intentionally permanent and reused across many practical sessions.
+The S3 bucket `aarush.kops.v1` stores cluster state, configuration, and metadata used by KOPS. This bucket is intentionally permanent and reused across many practical sessions.
 
 Important distinction:
 

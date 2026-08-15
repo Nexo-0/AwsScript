@@ -6,9 +6,9 @@ This repository intentionally stops at cluster infrastructure. Pods, Deployments
 
 Key environment defaults:
 
-- AWS Region: `ap-south-1`
-- Cluster Name: `kunal.k8s.local`
-- KOPS State Store: `s3://kunal-petare-kops-state-2026`
+- AWS Region: `us-east-1`
+- Cluster Name: `online.k8s.local`
+- KOPS State Store: `s3://aarush.kops.v1`
 - Management Machine OS: Amazon Linux 2023
 
 ## AWS Architecture
@@ -20,7 +20,7 @@ The cluster is built as a short-lived KOPS environment suitable for repeated lab
                                   | Permanent AWS Components          |
                                   |-----------------------------------|
                                   | S3 State Store                    |
-                                  | kunal-petare-kops-state-2026      |
+                                  | aarush.kops.v1                    |
                                   +----------------+------------------+
                                                    |
                                                    |
@@ -70,7 +70,7 @@ The cluster is built as a short-lived KOPS environment suitable for repeated lab
 Before using this repository, ensure the following are ready:
 
 - An AWS account with permissions for EC2, IAM instance profile usage, VPC, Auto Scaling, ELB, Route management, S3 state store access, and related KOPS operations
-- A permanent S3 bucket named `kunal-petare-kops-state-2026`
+- A permanent S3 bucket named `aarush.kops.v1`
 - An IAM user or role configured for the management EC2
 - An Amazon Linux 2023 management instance with outbound internet access
 - Basic packages such as `curl`, `tar`, `unzip`, and `ssh-keygen`
@@ -98,7 +98,7 @@ Launch a fresh Amazon Linux 2023 EC2 instance for each practical session. This i
 
 Recommended launch characteristics:
 
-- Region: `ap-south-1`
+- Region: `us-east-1`
 - OS: Amazon Linux 2023
 - Instance profile or AWS credentials with KOPS-required permissions
 - Security group allowing SSH from your trusted IP
@@ -128,7 +128,7 @@ aws sts get-caller-identity
 aws configure get region
 ```
 
-If no default region is configured, the scripts will use `ap-south-1`.
+If no default region is configured, the scripts will use `us-east-1`.
 
 ## Install Tools
 
@@ -159,9 +159,9 @@ source ./setup.sh
 
 Cluster defaults:
 
-- Cluster name: `kunal.k8s.local`
-- State store: `s3://kunal-petare-kops-state-2026`
-- Region: `ap-south-1`
+- Cluster name: `online.k8s.local`
+- State store: `s3://aarush.kops.v1`
+- Region: `us-east-1`
 - Control plane: `1 x c7i-flex.large`
 - Worker nodes: `1 x c7i-flex.large`
 - Networking: Calico
@@ -180,7 +180,7 @@ The cluster creation script:
 Validation is included in the creation workflow, but you can re-run checks manually:
 
 ```bash
-kops validate cluster --name kunal.k8s.local --state s3://kunal-petare-kops-state-2026 --wait 10m
+kops validate cluster --name online.k8s.local --state s3://aarush.kops.v1 --wait 10m
 kubectl get nodes -o wide
 kubectl cluster-info
 ```
@@ -200,7 +200,7 @@ source ./setup.sh
 ./destroy-cluster.sh
 ```
 
-The destroy script deletes only the cluster named `kunal.k8s.local`.
+The destroy script deletes only the cluster named `online.k8s.local`.
 
 It does not delete:
 

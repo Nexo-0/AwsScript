@@ -19,7 +19,7 @@ echo "${KOPS_STATE_STORE}"
 Expected value:
 
 ```text
-s3://kunal-petare-kops-state-2026
+s3://aarush.kops.v1
 ```
 
 If you execute `./setup.sh` instead of `source ./setup.sh`, the environment variables will not persist in your current shell.
@@ -44,14 +44,14 @@ aws configure get region
 This repository is designed for:
 
 ```text
-ap-south-1
+us-east-1
 ```
 
 If needed:
 
 ```bash
-export AWS_REGION=ap-south-1
-export AWS_DEFAULT_REGION=ap-south-1
+export AWS_REGION=us-east-1
+export AWS_DEFAULT_REGION=us-east-1
 ```
 
 Then re-run:
@@ -100,7 +100,7 @@ If you are using an EC2 instance role, confirm the instance was launched with th
 Check:
 
 ```bash
-kops validate cluster --name kunal.k8s.local --state s3://kunal-petare-kops-state-2026 --wait 10m
+kops validate cluster --name online.k8s.local --state s3://aarush.kops.v1 --wait 10m
 kubectl get nodes -o wide
 kubectl cluster-info
 ```
@@ -178,7 +178,7 @@ That script generates the local SSH key pair required for cluster creation.
 Refresh kubeconfig:
 
 ```bash
-kops export kubecfg --name kunal.k8s.local --state s3://kunal-petare-kops-state-2026 --admin=18h
+kops export kubecfg --name online.k8s.local --state s3://aarush.kops.v1 --admin=18h
 ```
 
 Then verify:

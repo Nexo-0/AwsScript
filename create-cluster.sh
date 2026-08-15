@@ -5,15 +5,15 @@ set -Eeuo pipefail
 # Create a reusable KOPS lab cluster for short-lived practical sessions.
 
 SCRIPT_NAME="$(basename "${BASH_SOURCE[0]}")"
-DEFAULT_AWS_REGION="ap-south-1"
-DEFAULT_CLUSTER_NAME="kunal.k8s.local"
-DEFAULT_KOPS_STATE_STORE="s3://kunal-petare-kops-state-2026"
-DEFAULT_ZONES="ap-south-1a,ap-south-1b,ap-south-1c"
-DEFAULT_MASTER_ZONES="ap-south-1a"
+DEFAULT_AWS_REGION="us-east-1"
+DEFAULT_CLUSTER_NAME="online.k8s.local"
+DEFAULT_KOPS_STATE_STORE="s3://aarush.kops.v1"
+DEFAULT_ZONES="us-east-1a"
+DEFAULT_CONTROL_PLANE_ZONES="us-east-1a"
 DEFAULT_NODE_COUNT="1"
 DEFAULT_NODE_SIZE="c7i-flex.large"
-DEFAULT_MASTER_COUNT="1"
-DEFAULT_MASTER_SIZE="c7i-flex.large"
+DEFAULT_CONTROL_PLANE_COUNT="1"
+DEFAULT_CONTROL_PLANE_SIZE="c7i-flex.large"
 DEFAULT_NETWORKING="calico"
 DEFAULT_TOPOLOGY="public"
 DEFAULT_VALIDATE_WAIT="25m"
@@ -66,16 +66,16 @@ require_command() {
 }
 
 load_defaults() {
-  export AWS_REGION="${AWS_REGION:-ap-south-1}"
+  export AWS_REGION="${AWS_REGION:-${DEFAULT_AWS_REGION}}"
   export AWS_DEFAULT_REGION="${AWS_DEFAULT_REGION:-${AWS_REGION}}"
   export KOPS_CLUSTER_NAME="${KOPS_CLUSTER_NAME:-${DEFAULT_CLUSTER_NAME}}"
   export KOPS_STATE_STORE="${KOPS_STATE_STORE:-${DEFAULT_KOPS_STATE_STORE}}"
   export KOPS_ZONES="${KOPS_ZONES:-${DEFAULT_ZONES}}"
-  export KOPS_MASTER_ZONES="${KOPS_MASTER_ZONES:-${DEFAULT_MASTER_ZONES}}"
+  export KOPS_CONTROL_PLANE_ZONES="${KOPS_CONTROL_PLANE_ZONES:-${DEFAULT_CONTROL_PLANE_ZONES}}"
   export KOPS_NODE_COUNT="${KOPS_NODE_COUNT:-${DEFAULT_NODE_COUNT}}"
   export KOPS_NODE_SIZE="${KOPS_NODE_SIZE:-${DEFAULT_NODE_SIZE}}"
-  export KOPS_MASTER_COUNT="${KOPS_MASTER_COUNT:-${DEFAULT_MASTER_COUNT}}"
-  export KOPS_MASTER_SIZE="${KOPS_MASTER_SIZE:-${DEFAULT_MASTER_SIZE}}"
+  export KOPS_CONTROL_PLANE_COUNT="${KOPS_CONTROL_PLANE_COUNT:-${DEFAULT_CONTROL_PLANE_COUNT}}"
+  export KOPS_CONTROL_PLANE_SIZE="${KOPS_CONTROL_PLANE_SIZE:-${DEFAULT_CONTROL_PLANE_SIZE}}"
   export KOPS_NETWORKING="${KOPS_NETWORKING:-${DEFAULT_NETWORKING}}"
   export KOPS_TOPOLOGY="${KOPS_TOPOLOGY:-${DEFAULT_TOPOLOGY}}"
   export KOPS_VALIDATE_WAIT="${KOPS_VALIDATE_WAIT:-${DEFAULT_VALIDATE_WAIT}}"
@@ -87,9 +87,9 @@ print_configuration() {
   printf "  KOPS_STATE_STORE=%s\n" "${KOPS_STATE_STORE}"
   printf "  KOPS_CLUSTER_NAME=%s\n" "${KOPS_CLUSTER_NAME}"
   printf "  KOPS_ZONES=%s\n" "${KOPS_ZONES}"
-  printf "  KOPS_MASTER_ZONES=%s\n" "${KOPS_MASTER_ZONES}"
-  printf "  KOPS_MASTER_COUNT=%s\n" "${KOPS_MASTER_COUNT}"
-  printf "  KOPS_MASTER_SIZE=%s\n" "${KOPS_MASTER_SIZE}"
+  printf "  KOPS_CONTROL_PLANE_ZONES=%s\n" "${KOPS_CONTROL_PLANE_ZONES}"
+  printf "  KOPS_CONTROL_PLANE_COUNT=%s\n" "${KOPS_CONTROL_PLANE_COUNT}"
+  printf "  KOPS_CONTROL_PLANE_SIZE=%s\n" "${KOPS_CONTROL_PLANE_SIZE}"
   printf "  KOPS_NODE_COUNT=%s\n" "${KOPS_NODE_COUNT}"
   printf "  KOPS_NODE_SIZE=%s\n" "${KOPS_NODE_SIZE}"
   printf "  KOPS_NETWORKING=%s\n" "${KOPS_NETWORKING}"
@@ -198,9 +198,9 @@ create_cluster_configuration() {
     --state "${KOPS_STATE_STORE}" \
     --cloud aws \
     --zones "${KOPS_ZONES}" \
-    --master-zones "${KOPS_MASTER_ZONES}" \
-    --master-count "${KOPS_MASTER_COUNT}" \
-    --master-size "${KOPS_MASTER_SIZE}" \
+    --control-plane-zones "${KOPS_CONTROL_PLANE_ZONES}" \
+    --control-plane-count "${KOPS_CONTROL_PLANE_COUNT}" \
+    --control-plane-size "${KOPS_CONTROL_PLANE_SIZE}" \
     --node-count "${KOPS_NODE_COUNT}" \
     --node-size "${KOPS_NODE_SIZE}" \
     --networking "${KOPS_NETWORKING}" \

@@ -2,20 +2,20 @@
 
 ## Goal
 
-Prepare AWS so that a fresh Amazon Linux 2023 management instance can repeatedly create and destroy the KOPS lab cluster in `ap-south-1`.
+Prepare AWS so that a fresh Amazon Linux 2023 management instance can repeatedly create and destroy the KOPS lab cluster in `us-east-1`.
 
 ## Fixed Environment Values
 
-- Region: `ap-south-1`
-- Cluster Name: `kunal.k8s.local`
-- State Store: `s3://kunal-petare-kops-state-2026`
+- Region: `us-east-1`
+- Cluster Name: `online.k8s.local`
+- State Store: `s3://aarush.kops.v1`
 
 ## S3 State Store
 
 Create and keep the following bucket permanently:
 
 ```text
-kunal-petare-kops-state-2026
+aarush.kops.v1
 ```
 
 Recommended bucket settings:
@@ -28,9 +28,9 @@ Recommended bucket settings:
 Example command:
 
 ```bash
-aws s3 mb s3://kunal-petare-kops-state-2026 --region ap-south-1
+aws s3 mb s3://aarush.kops.v1 --region us-east-1
 aws s3api put-bucket-versioning \
-  --bucket kunal-petare-kops-state-2026 \
+  --bucket aarush.kops.v1 \
   --versioning-configuration Status=Enabled
 ```
 
@@ -64,7 +64,7 @@ Then verify:
 aws sts get-caller-identity
 ```
 
-## Why `kunal.k8s.local` Works
+## Why `online.k8s.local` Works
 
 The cluster name uses the `.k8s.local` suffix, which is commonly used with KOPS for non-public DNS and lab-style clusters. This avoids the need to register a public DNS zone for repeated practice environments.
 
@@ -75,7 +75,7 @@ Use a separate temporary EC2 instance as the management host for each practical.
 Recommended characteristics:
 
 - OS: Amazon Linux 2023
-- Region: `ap-south-1`
+- Region: `us-east-1`
 - Inbound SSH from your trusted IP only
 - Outbound internet access enabled
 - An attached IAM role whenever possible
@@ -91,7 +91,7 @@ aws sts get-caller-identity
 aws configure get region
 ```
 
-If `aws configure get region` is empty, the scripts default to `ap-south-1`.
+If `aws configure get region` is empty, the scripts default to `us-east-1`.
 
 ## Expected AWS Resources Created by KOPS
 
@@ -121,7 +121,7 @@ Useful checks before cluster creation:
 
 ```bash
 aws sts get-caller-identity
-aws s3api head-bucket --bucket kunal-petare-kops-state-2026
+aws s3api head-bucket --bucket aarush.kops.v1
 kops version
 kubectl version --client
 ```

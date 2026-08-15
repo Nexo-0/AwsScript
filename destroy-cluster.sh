@@ -5,9 +5,9 @@ set -Eeuo pipefail
 # Destroy the KOPS lab cluster without deleting the reusable S3 state store.
 
 SCRIPT_NAME="$(basename "${BASH_SOURCE[0]}")"
-DEFAULT_AWS_REGION="ap-south-1"
-DEFAULT_CLUSTER_NAME="kunal.k8s.local"
-DEFAULT_KOPS_STATE_STORE="s3://kunal-petare-kops-state-2026"
+DEFAULT_AWS_REGION="us-east-1"
+DEFAULT_CLUSTER_NAME="online.k8s.local"
+DEFAULT_KOPS_STATE_STORE="s3://aarush.kops.v1"
 
 if [[ -t 1 ]]; then
   RED='\033[0;31m'
