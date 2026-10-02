@@ -7,7 +7,7 @@ set -Eeuo pipefail
 SCRIPT_NAME="$(basename "${BASH_SOURCE[0]}")"
 DEFAULT_AWS_REGION="us-east-1"
 DEFAULT_CLUSTER_NAME="online.k8s.local"
-DEFAULT_KOPS_STATE_STORE="s3://aarush.kops.v1"
+DEFAULT_KOPS_STATE_STORE="s3://aarush.kops.v2"
 DEFAULT_ZONES="us-east-1a"
 DEFAULT_CONTROL_PLANE_ZONES="us-east-1a"
 DEFAULT_NODE_COUNT="1"
